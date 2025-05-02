@@ -37,12 +37,12 @@ const SurebetCalculator = () => {
 
   const calculateResults = () => {
     if (!odds.every(odd => odd > 1)) {
-      toast.error("All odds must be greater than 1");
+      toast.error("Todas as odds devem ser maiores que 1");
       return;
     }
 
     if (totalStake <= 0) {
-      toast.error("Total stake must be greater than 0");
+      toast.error("Valor total da aposta deve ser maior que 0");
       return;
     }
 
@@ -64,7 +64,7 @@ const SurebetCalculator = () => {
 
   const handleAddOdd = () => {
     if (odds.length >= 5) {
-      toast.warning("Maximum 5 odds allowed");
+      toast.warning("Máximo de 5 odds permitido");
       return;
     }
     setOdds([...odds, 2.0]);
@@ -72,7 +72,7 @@ const SurebetCalculator = () => {
 
   const handleRemoveOdd = (index: number) => {
     if (odds.length <= 2) {
-      toast.warning("Minimum 2 odds required");
+      toast.warning("Mínimo de 2 odds necessário");
       return;
     }
     const newOdds = [...odds];
@@ -115,7 +115,7 @@ const SurebetCalculator = () => {
           <CardHeader>
             <CardTitle className="text-xl flex items-center">
               <Calculator className="w-5 h-5 mr-2 text-uchiha-red" />
-              Odds & Stakes
+              Odds & Apostas
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -123,14 +123,14 @@ const SurebetCalculator = () => {
               {/* Odds Input Section */}
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-sm font-semibold text-gray-400">Betting Odds</h3>
+                  <h3 className="text-sm font-semibold text-gray-400">Cotações de Apostas</h3>
                   <Button 
                     variant="outline" 
                     size="sm" 
                     onClick={handleAddOdd}
                     className="sharingan-button"
                   >
-                    <Plus className="w-4 h-4 mr-1" /> Add Odd
+                    <Plus className="w-4 h-4 mr-1" /> Adicionar Odd
                   </Button>
                 </div>
                 
@@ -153,7 +153,7 @@ const SurebetCalculator = () => {
               {/* Total Stake Input */}
               <div className="space-y-2">
                 <label htmlFor="totalStake" className="text-sm font-semibold text-gray-400">
-                  Total Stake (R$)
+                  Valor Total da Aposta (R$)
                 </label>
                 <Input
                   id="totalStake"
@@ -169,7 +169,7 @@ const SurebetCalculator = () => {
               {/* Rounding Value Input */}
               <div className="space-y-2">
                 <label htmlFor="roundingValue" className="text-sm font-semibold text-gray-400">
-                  Round Stakes To (R$)
+                  Arredondar Apostas Para (R$)
                 </label>
                 <Input
                   id="roundingValue"
@@ -191,7 +191,7 @@ const SurebetCalculator = () => {
                 )}
                 variant="outline"
               >
-                Calculate Surebet <ArrowRight className="ml-2 w-4 h-4" />
+                Calcular Surebet <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </div>
           </CardContent>
@@ -200,15 +200,15 @@ const SurebetCalculator = () => {
         {/* Results Section */}
         <Card className="uchiha-card">
           <CardHeader>
-            <CardTitle className="text-xl">Results</CardTitle>
+            <CardTitle className="text-xl">Resultados</CardTitle>
             <div>
               <div className={cn(
                 "text-sm font-medium", 
                 isSurebetPossible ? "text-green-400" : "text-uchiha-red"
               )}>
                 {isSurebetPossible 
-                  ? `Surebet Found: ${margin.toFixed(2)}% profit`
-                  : "Not a Surebet"
+                  ? `Surebet Encontrada: ${margin.toFixed(2)}% de lucro`
+                  : "Não é uma Surebet"
                 }
               </div>
               {isSurebetPossible && (

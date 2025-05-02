@@ -25,7 +25,7 @@ const ResultsDisplay = ({
     <div className="space-y-4">
       {/* Distribution of stakes */}
       <div className="space-y-3">
-        <div className="text-sm font-semibold text-gray-400">Stake Distribution</div>
+        <div className="text-sm font-semibold text-gray-400">Distribuição das Apostas</div>
         {stakes.map((stake, index) => (
           <div key={index} className="flex justify-between items-center">
             <div className="flex items-center">
@@ -34,12 +34,12 @@ const ResultsDisplay = ({
               </div>
               <div>
                 <div className="text-sm">Odd: {odds[index].toFixed(2)}</div>
-                <div className="text-xs text-gray-400">Stake: R$ {stake.toFixed(2)}</div>
+                <div className="text-xs text-gray-400">Aposta: R$ {stake.toFixed(2)}</div>
               </div>
             </div>
             <div className="text-right">
               <div className="font-medium">R$ {(stake * odds[index]).toFixed(2)}</div>
-              <div className="text-xs text-gray-400">Return</div>
+              <div className="text-xs text-gray-400">Retorno</div>
             </div>
           </div>
         ))}
@@ -50,7 +50,7 @@ const ResultsDisplay = ({
       {/* Custom stake input */}
       <div className="space-y-2">
         <label htmlFor="customStake" className="text-sm font-semibold text-gray-400">
-          Custom Total Stake (R$)
+          Valor Total Personalizado (R$)
         </label>
         <Input
           id="customStake"
@@ -71,7 +71,7 @@ const ResultsDisplay = ({
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <ArrowUp className={`w-5 h-5 mr-2 ${profit >= 0 ? 'text-green-500' : 'text-uchiha-red'}`} />
-            <span className="text-sm font-semibold">Guaranteed Profit:</span>
+            <span className="text-sm font-semibold">Lucro Garantido:</span>
           </div>
           <div className={`font-bold ${profit >= 0 ? 'text-green-500' : 'text-uchiha-red'}`}>
             R$ {profit.toFixed(2)}
@@ -82,7 +82,7 @@ const ResultsDisplay = ({
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <Percent className={`w-5 h-5 mr-2 ${profitPercentage >= 0 ? 'text-green-500' : 'text-uchiha-red'}`} />
-            <span className="text-sm font-semibold">Profit Percentage:</span>
+            <span className="text-sm font-semibold">Percentual de Lucro:</span>
           </div>
           <div className={`font-bold ${profitPercentage >= 0 ? 'text-green-500' : 'text-uchiha-red'}`}>
             {profitPercentage.toFixed(2)}%
@@ -92,7 +92,7 @@ const ResultsDisplay = ({
       
       {profit < 0 && (
         <div className="text-xs text-uchiha-red mt-2">
-          Warning: This is not a surebet. You may lose money.
+          Atenção: Isto não é uma surebet. Você pode perder dinheiro.
         </div>
       )}
     </div>
