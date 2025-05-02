@@ -13,9 +13,8 @@ const Index = () => {
           <SharinganLogo className="mr-4" />
           <div>
             <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
-              Uchiha <span className="text-uchiha-red">Surebet</span>
+              Madara <span className="text-uchiha-red">Surebet</span>
             </h1>
-            <p className="text-gray-400 md:text-lg">Apostas com a precisão do Sharingan</p>
           </div>
         </div>
         
