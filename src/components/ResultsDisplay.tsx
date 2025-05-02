@@ -1,8 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { ArrowUp, ArrowDown, Percent } from 'lucide-react';
+import { ArrowUp, ArrowDown, Percent, DollarSign } from 'lucide-react';
 
 interface ResultsDisplayProps {
   stakes: number[];
@@ -11,6 +11,7 @@ interface ResultsDisplayProps {
   profitPercentage: number;
   customStake: number;
   onCustomStakeChange: (value: number) => void;
+  onSpecificStakeChange: (index: number, value: number) => void;
 }
 
 const ResultsDisplay = ({ 
@@ -19,7 +20,8 @@ const ResultsDisplay = ({
   profit, 
   profitPercentage, 
   customStake, 
-  onCustomStakeChange 
+  onCustomStakeChange,
+  onSpecificStakeChange
 }: ResultsDisplayProps) => {
   return (
     <div className="space-y-4">
@@ -27,19 +29,29 @@ const ResultsDisplay = ({
       <div className="space-y-3">
         <div className="text-sm font-semibold text-gray-400">Distribuição das Apostas</div>
         {stakes.map((stake, index) => (
-          <div key={index} className="flex justify-between items-center">
-            <div className="flex items-center">
-              <div className="flex items-center justify-center bg-uchiha-red w-8 h-8 rounded-md mr-2">
-                <span className="text-white font-semibold">{String.fromCharCode(65 + index)}</span>
-              </div>
-              <div>
-                <div className="text-sm">Odd: {odds[index].toFixed(2)}</div>
-                <div className="text-xs text-gray-400">Aposta: R$ {stake.toFixed(2)}</div>
+          <div key={index} className="space-y-2">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <div className="flex items-center justify-center bg-uchiha-red w-8 h-8 rounded-md mr-2">
+                  <span className="text-white font-semibold">{String.fromCharCode(65 + index)}</span>
+                </div>
+                <div>
+                  <div className="text-sm">Odd: {odds[index].toFixed(2)}</div>
+                  <div className="text-xs text-gray-400">Retorno: R$ {(stake * odds[index]).toFixed(2)}</div>
+                </div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="font-medium">R$ {(stake * odds[index]).toFixed(2)}</div>
-              <div className="text-xs text-gray-400">Retorno</div>
+            <div className="flex items-center gap-2">
+              <DollarSign className="h-4 w-4 text-gray-400" />
+              <Input
+                type="number"
+                min="0"
+                step="1"
+                value={stake}
+                onChange={(e) => onSpecificStakeChange(index, parseFloat(e.target.value) || 0)}
+                className="bg-uchiha-gray text-white"
+                placeholder={`Valor para Odd ${String.fromCharCode(65 + index)}`}
+              />
             </div>
           </div>
         ))}

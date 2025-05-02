@@ -1,4 +1,3 @@
-
 // Calculate if a bet is a "surebet" (guaranteed profit)
 export const isSurebet = (odds: number[]): boolean => {
   if (odds.length < 2 || odds.some(odd => odd <= 1)) return false;
@@ -97,4 +96,28 @@ export const recalculateStakesForCustomTotal = (
   
   const ratio = customTotalStake / currentTotal;
   return stakes.map(stake => stake * ratio);
+};
+
+// Recalculate stakes when the user sets a specific bet amount for one outcome
+export const recalculateStakesForSpecificBet = (
+  currentStakes: number[],
+  odds: number[],
+  changedIndex: number,
+  newStakeValue: number
+): number[] => {
+  // Calculate the guaranteed return for the specific bet
+  const targetReturn = newStakeValue * odds[changedIndex];
+  
+  // Create a new stakes array with the changed stake
+  const newStakes = [...currentStakes];
+  newStakes[changedIndex] = newStakeValue;
+  
+  // Calculate what the other stakes should be to match the same return
+  for (let i = 0; i < newStakes.length; i++) {
+    if (i !== changedIndex) {
+      newStakes[i] = targetReturn / odds[i];
+    }
+  }
+  
+  return newStakes;
 };

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,7 +16,8 @@ import {
   roundStakes,
   calculateTotalProfit,
   calculateProfitPercentage,
-  recalculateStakesForCustomTotal 
+  recalculateStakesForCustomTotal,
+  recalculateStakesForSpecificBet
 } from '@/utils/surebetCalculator';
 
 const SurebetCalculator = () => {
@@ -94,6 +94,20 @@ const SurebetCalculator = () => {
     const calculatedProfitPercentage = calculateProfitPercentage(calculatedProfit, value);
     
     setStakes(customCalculatedStakes);
+    setProfit(calculatedProfit);
+    setProfitPercentage(calculatedProfitPercentage);
+  };
+
+  const handleSpecificStakeChange = (index: number, value: number) => {
+    const newStakes = recalculateStakesForSpecificBet(stakes, odds, index, value);
+    const newTotalStake = newStakes.reduce((sum, stake) => sum + stake, 0);
+    
+    setStakes(newStakes);
+    setCustomStake(newTotalStake);
+    
+    const calculatedProfit = calculateTotalProfit(newStakes, odds, newTotalStake);
+    const calculatedProfitPercentage = calculateProfitPercentage(calculatedProfit, newTotalStake);
+    
     setProfit(calculatedProfit);
     setProfitPercentage(calculatedProfitPercentage);
   };
@@ -227,6 +241,7 @@ const SurebetCalculator = () => {
               profitPercentage={profitPercentage}
               customStake={customStake}
               onCustomStakeChange={handleCustomStakeChange}
+              onSpecificStakeChange={handleSpecificStakeChange}
             />
             
             <div className="mt-6 text-center">
