@@ -1,17 +1,17 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { ArrowUp, ArrowDown, Percent, DollarSign } from 'lucide-react';
+import { ArrowUp, Percent, DollarSign } from 'lucide-react';
 
 interface ResultsDisplayProps {
   stakes: number[];
   odds: number[];
   profit: number;
   profitPercentage: number;
-  customStake: number;
-  onCustomStakeChange: (value: number) => void;
-  onSpecificStakeChange: (index: number, value: number) => void;
+  customStake: number | '';
+  onCustomStakeChange: (value: number | '') => void;
+  onSpecificStakeChange: (index: number, value: number | '') => void;
 }
 
 const ResultsDisplay = ({ 
@@ -48,7 +48,10 @@ const ResultsDisplay = ({
                 min="0"
                 step="1"
                 value={stake}
-                onChange={(e) => onSpecificStakeChange(index, parseFloat(e.target.value) || 0)}
+                onChange={(e) => {
+                  const val = e.target.value === '' ? '' : parseFloat(e.target.value);
+                  onSpecificStakeChange(index, val as number);
+                }}
                 className="bg-uchiha-gray text-white"
                 placeholder={`Valor para Odd ${String.fromCharCode(65 + index)}`}
               />
@@ -70,7 +73,10 @@ const ResultsDisplay = ({
           min="0"
           step="10"
           value={customStake}
-          onChange={(e) => onCustomStakeChange(parseFloat(e.target.value) || 0)}
+          onChange={(e) => {
+            const val = e.target.value === '' ? '' : parseFloat(e.target.value);
+            onCustomStakeChange(val);
+          }}
           className="bg-uchiha-gray text-white"
         />
       </div>

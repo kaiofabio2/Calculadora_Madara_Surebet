@@ -22,17 +22,19 @@ import {
 
 const SurebetCalculator = () => {
   const [odds, setOdds] = useState<number[]>([2.0, 2.0]);
-  const [totalStake, setTotalStake] = useState<number>(100);
-  const [roundingValue, setRoundingValue] = useState<number>(1);
-  const [customStake, setCustomStake] = useState<number>(100);
-  const [stakes, setStakes] = useState<number[]>([50, 50]);
+  const [totalStake, setTotalStake] = useState<number | ''>('');
+  const [roundingValue, setRoundingValue] = useState<number | ''>('');
+  const [customStake, setCustomStake] = useState<number | ''>('');
+  const [stakes, setStakes] = useState<number[]>([0, 0]);
   const [profit, setProfit] = useState<number>(0);
   const [profitPercentage, setProfitPercentage] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
   // Update calculations when inputs change
   useEffect(() => {
-    calculateResults();
+    if (typeof totalStake === 'number' && totalStake > 0 && odds.every(odd => odd > 1)) {
+      calculateResults();
+    }
   }, [odds, totalStake, roundingValue]);
 
   const calculateResults = () => {
@@ -41,13 +43,15 @@ const SurebetCalculator = () => {
       return;
     }
 
-    if (totalStake <= 0) {
+    if (typeof totalStake !== 'number' || totalStake <= 0) {
       toast.error("Valor total da aposta deve ser maior que 0");
       return;
     }
 
     const calculatedStakes = calculateStakes(odds, totalStake);
-    const roundedStakes = roundStakes(calculatedStakes, roundingValue, totalStake);
+    const roundedStakes = typeof roundingValue === 'number' && roundingValue > 0
+      ? roundStakes(calculatedStakes, roundingValue, totalStake)
+      : calculatedStakes;
     
     const calculatedProfit = calculateTotalProfit(roundedStakes, odds, totalStake);
     const calculatedProfitPercentage = calculateProfitPercentage(calculatedProfit, totalStake);
@@ -86,30 +90,34 @@ const SurebetCalculator = () => {
     setOdds(newOdds);
   };
 
-  const handleCustomStakeChange = (value: number) => {
+  const handleCustomStakeChange = (value: number | '') => {
     setCustomStake(value);
-    const customCalculatedStakes = recalculateStakesForCustomTotal(stakes, value);
-    
-    const calculatedProfit = calculateTotalProfit(customCalculatedStakes, odds, value);
-    const calculatedProfitPercentage = calculateProfitPercentage(calculatedProfit, value);
-    
-    setStakes(customCalculatedStakes);
-    setProfit(calculatedProfit);
-    setProfitPercentage(calculatedProfitPercentage);
+    if (typeof value === 'number' && value > 0) {
+      const customCalculatedStakes = recalculateStakesForCustomTotal(stakes, value);
+      
+      const calculatedProfit = calculateTotalProfit(customCalculatedStakes, odds, value);
+      const calculatedProfitPercentage = calculateProfitPercentage(calculatedProfit, value);
+      
+      setStakes(customCalculatedStakes);
+      setProfit(calculatedProfit);
+      setProfitPercentage(calculatedProfitPercentage);
+    }
   };
 
-  const handleSpecificStakeChange = (index: number, value: number) => {
-    const newStakes = recalculateStakesForSpecificBet(stakes, odds, index, value);
-    const newTotalStake = newStakes.reduce((sum, stake) => sum + stake, 0);
-    
-    setStakes(newStakes);
-    setCustomStake(newTotalStake);
-    
-    const calculatedProfit = calculateTotalProfit(newStakes, odds, newTotalStake);
-    const calculatedProfitPercentage = calculateProfitPercentage(calculatedProfit, newTotalStake);
-    
-    setProfit(calculatedProfit);
-    setProfitPercentage(calculatedProfitPercentage);
+  const handleSpecificStakeChange = (index: number, value: number | '') => {
+    if (typeof value === 'number' && value >= 0) {
+      const newStakes = recalculateStakesForSpecificBet(stakes, odds, index, value);
+      const newTotalStake = newStakes.reduce((sum, stake) => sum + stake, 0);
+      
+      setStakes(newStakes);
+      setCustomStake(newTotalStake);
+      
+      const calculatedProfit = calculateTotalProfit(newStakes, odds, newTotalStake);
+      const calculatedProfitPercentage = calculateProfitPercentage(calculatedProfit, newTotalStake);
+      
+      setProfit(calculatedProfit);
+      setProfitPercentage(calculatedProfitPercentage);
+    }
   };
 
   const isSurebetPossible = isSurebet(odds);
@@ -175,7 +183,10 @@ const SurebetCalculator = () => {
                   min="0"
                   step="10"
                   value={totalStake}
-                  onChange={(e) => setTotalStake(parseFloat(e.target.value) || 0)}
+                  onChange={(e) => {
+                    const val = e.target.value === '' ? '' : parseFloat(e.target.value);
+                    setTotalStake(val);
+                  }}
                   className="bg-uchiha-gray text-white"
                 />
               </div>
@@ -191,7 +202,10 @@ const SurebetCalculator = () => {
                   min="0"
                   step="0.5"
                   value={roundingValue}
-                  onChange={(e) => setRoundingValue(parseFloat(e.target.value) || 0)}
+                  onChange={(e) => {
+                    const val = e.target.value === '' ? '' : parseFloat(e.target.value);
+                    setRoundingValue(val);
+                  }}
                   className="bg-uchiha-gray text-white"
                 />
               </div>
