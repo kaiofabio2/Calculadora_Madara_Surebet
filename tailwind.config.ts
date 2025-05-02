@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,12 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				uchiha: {
+					black: '#121212',
+					red: '#ea384c',
+					darkRed: '#a21b29',
+					gray: '#333333',
 				}
 			},
 			borderRadius: {
@@ -84,11 +91,24 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'sharingan-spin': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' }
+				},
+				'pulse-red': {
+					'0%, 100%': { boxShadow: '0 0 0 0 rgba(234, 56, 76, 0)' },
+					'50%': { boxShadow: '0 0 0 10px rgba(234, 56, 76, 0.2)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'sharingan-spin': 'sharingan-spin 8s linear infinite',
+				'pulse-red': 'pulse-red 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+			},
+			backgroundImage: {
+				'uchiha-pattern': "url('/uchiha-symbol.svg')"
 			}
 		}
 	},
