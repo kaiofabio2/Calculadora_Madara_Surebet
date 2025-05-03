@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
-import { Calculator, Plus, Minus, ArrowRight } from 'lucide-react';
+import { Calculator, Plus, Minus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import OddInput from '@/components/OddInput';
@@ -22,13 +23,11 @@ import {
 
 const SurebetCalculator = () => {
   const [odds, setOdds] = useState<number[]>([2.0, 2.0]);
-  const [totalStake, setTotalStake] = useState<number | ''>('');
-  const [roundingValue, setRoundingValue] = useState<number | ''>('');
-  const [customStake, setCustomStake] = useState<number | ''>('');
+  const [totalStake, setTotalStake] = useState<number | ''>();
+  const [roundingValue, setRoundingValue] = useState<number | ''>();
   const [stakes, setStakes] = useState<number[]>([0, 0]);
   const [profit, setProfit] = useState<number>(0);
   const [profitPercentage, setProfitPercentage] = useState<number>(0);
-  const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
   // Update calculations when inputs change
   useEffect(() => {
@@ -57,13 +56,8 @@ const SurebetCalculator = () => {
     const calculatedProfitPercentage = calculateProfitPercentage(calculatedProfit, totalStake);
     
     setStakes(roundedStakes);
-    setCustomStake(totalStake);
     setProfit(calculatedProfit);
     setProfitPercentage(calculatedProfitPercentage);
-
-    // Trigger animation
-    setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 1000);
   };
 
   const handleAddOdd = () => {
@@ -72,6 +66,7 @@ const SurebetCalculator = () => {
       return;
     }
     setOdds([...odds, 2.0]);
+    setStakes([...stakes, 0]); // Adicione um novo elemento ao stakes para manter sincronizado com as odds
   };
 
   const handleRemoveOdd = (index: number) => {
@@ -82,6 +77,11 @@ const SurebetCalculator = () => {
     const newOdds = [...odds];
     newOdds.splice(index, 1);
     setOdds(newOdds);
+    
+    // Também atualiza o array de stakes
+    const newStakes = [...stakes];
+    newStakes.splice(index, 1);
+    setStakes(newStakes);
   };
 
   const updateOdd = (index: number, value: number) => {
@@ -90,33 +90,24 @@ const SurebetCalculator = () => {
     setOdds(newOdds);
   };
 
-  const handleCustomStakeChange = (value: number | '') => {
-    setCustomStake(value);
-    if (typeof value === 'number' && value > 0) {
-      const customCalculatedStakes = recalculateStakesForCustomTotal(stakes, value);
-      
-      const calculatedProfit = calculateTotalProfit(customCalculatedStakes, odds, value);
-      const calculatedProfitPercentage = calculateProfitPercentage(calculatedProfit, value);
-      
-      setStakes(customCalculatedStakes);
-      setProfit(calculatedProfit);
-      setProfitPercentage(calculatedProfitPercentage);
-    }
-  };
-
   const handleSpecificStakeChange = (index: number, value: number | '') => {
     if (typeof value === 'number' && value >= 0) {
       const newStakes = recalculateStakesForSpecificBet(stakes, odds, index, value);
       const newTotalStake = newStakes.reduce((sum, stake) => sum + stake, 0);
       
       setStakes(newStakes);
-      setCustomStake(newTotalStake);
+      setTotalStake(newTotalStake);
       
       const calculatedProfit = calculateTotalProfit(newStakes, odds, newTotalStake);
       const calculatedProfitPercentage = calculateProfitPercentage(calculatedProfit, newTotalStake);
       
       setProfit(calculatedProfit);
       setProfitPercentage(calculatedProfitPercentage);
+    } else if (value === '') {
+      // Permite que o campo fique vazio
+      const newStakes = [...stakes];
+      newStakes[index] = 0;
+      setStakes(newStakes);
     }
   };
 
@@ -182,7 +173,7 @@ const SurebetCalculator = () => {
                   type="number"
                   min="0"
                   step="10"
-                  value={totalStake}
+                  value={totalStake ?? ''}
                   onChange={(e) => {
                     const val = e.target.value === '' ? '' : parseFloat(e.target.value);
                     setTotalStake(val);
@@ -201,7 +192,7 @@ const SurebetCalculator = () => {
                   type="number"
                   min="0"
                   step="0.5"
-                  value={roundingValue}
+                  value={roundingValue ?? ''}
                   onChange={(e) => {
                     const val = e.target.value === '' ? '' : parseFloat(e.target.value);
                     setRoundingValue(val);
@@ -209,18 +200,6 @@ const SurebetCalculator = () => {
                   className="bg-uchiha-gray text-white"
                 />
               </div>
-
-              {/* Calculate Button */}
-              <Button 
-                onClick={calculateResults}
-                className={cn(
-                  "w-full sharingan-button",
-                  isAnimating && "sharingan-pulse"
-                )}
-                variant="outline"
-              >
-                Calcular Surebet <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
             </div>
           </CardContent>
         </Card>
@@ -253,8 +232,6 @@ const SurebetCalculator = () => {
               odds={odds}
               profit={profit}
               profitPercentage={profitPercentage}
-              customStake={customStake}
-              onCustomStakeChange={handleCustomStakeChange}
               onSpecificStakeChange={handleSpecificStakeChange}
             />
             

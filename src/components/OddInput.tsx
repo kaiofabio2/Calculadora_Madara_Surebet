@@ -22,8 +22,12 @@ const OddInput = ({ index, value, onChange, onRemove, isRemovable }: OddInputPro
         type="number"
         min="1.01"
         step="0.01"
-        value={value}
-        onChange={(e) => onChange(index, parseFloat(e.target.value) || 0)}
+        value={value || ''}
+        onChange={(e) => {
+          const inputValue = e.target.value;
+          const parsedValue = inputValue === '' ? 0 : parseFloat(inputValue);
+          onChange(index, parsedValue);
+        }}
         className="bg-uchiha-gray text-white"
       />
       {isRemovable && (

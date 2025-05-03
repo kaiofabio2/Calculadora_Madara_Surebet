@@ -9,8 +9,6 @@ interface ResultsDisplayProps {
   odds: number[];
   profit: number;
   profitPercentage: number;
-  customStake: number | '';
-  onCustomStakeChange: (value: number | '') => void;
   onSpecificStakeChange: (index: number, value: number | '') => void;
 }
 
@@ -18,9 +16,7 @@ const ResultsDisplay = ({
   stakes, 
   odds,
   profit, 
-  profitPercentage, 
-  customStake, 
-  onCustomStakeChange,
+  profitPercentage,
   onSpecificStakeChange
 }: ResultsDisplayProps) => {
   return (
@@ -37,7 +33,9 @@ const ResultsDisplay = ({
                 </div>
                 <div>
                   <div className="text-sm">Odd: {odds[index].toFixed(2)}</div>
-                  <div className="text-xs text-gray-400">Retorno: R$ {(stake * odds[index]).toFixed(2)}</div>
+                  <div className="text-xs text-gray-400">
+                    Retorno: R$ {stake ? (stake * odds[index]).toFixed(2) : '0.00'}
+                  </div>
                 </div>
               </div>
             </div>
@@ -47,10 +45,10 @@ const ResultsDisplay = ({
                 type="number"
                 min="0"
                 step="1"
-                value={stake}
+                value={stake || ''}
                 onChange={(e) => {
                   const val = e.target.value === '' ? '' : parseFloat(e.target.value);
-                  onSpecificStakeChange(index, val as number);
+                  onSpecificStakeChange(index, val);
                 }}
                 className="bg-uchiha-gray text-white"
                 placeholder={`Valor para Odd ${String.fromCharCode(65 + index)}`}
@@ -58,27 +56,6 @@ const ResultsDisplay = ({
             </div>
           </div>
         ))}
-      </div>
-      
-      <Separator className="bg-uchiha-gray" />
-      
-      {/* Custom stake input */}
-      <div className="space-y-2">
-        <label htmlFor="customStake" className="text-sm font-semibold text-gray-400">
-          Valor Total Personalizado (R$)
-        </label>
-        <Input
-          id="customStake"
-          type="number"
-          min="0"
-          step="10"
-          value={customStake}
-          onChange={(e) => {
-            const val = e.target.value === '' ? '' : parseFloat(e.target.value);
-            onCustomStakeChange(val);
-          }}
-          className="bg-uchiha-gray text-white"
-        />
       </div>
       
       <Separator className="bg-uchiha-gray" />
