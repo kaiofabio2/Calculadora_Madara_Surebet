@@ -2,7 +2,7 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { ArrowUp, Percent, DollarSign } from 'lucide-react';
+import { ArrowUp, Percent, DollarSign, RefreshCw } from 'lucide-react';
 
 interface ResultsDisplayProps {
   stakes: number[];
@@ -19,6 +19,14 @@ const ResultsDisplay = ({
   profitPercentage,
   onSpecificStakeChange
 }: ResultsDisplayProps) => {
+  // Calculate total stake
+  const totalStake = stakes.reduce((sum, stake) => sum + (stake || 0), 0);
+  
+  // Calculate total return (assuming all odds have the same return value in a balanced surebet)
+  const totalReturn = stakes.length > 0 && odds.length > 0 && stakes[0] && odds[0] 
+    ? (stakes[0] * odds[0]) 
+    : 0;
+
   return (
     <div className="space-y-4">
       {/* Distribution of stakes */}
@@ -81,6 +89,17 @@ const ResultsDisplay = ({
           </div>
           <div className={`font-bold ${profitPercentage >= 0 ? 'text-green-500' : 'text-uchiha-red'}`}>
             {profitPercentage.toFixed(2)}%
+          </div>
+        </div>
+        
+        {/* Total return */}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            <RefreshCw className="w-5 h-5 mr-2 text-blue-400" />
+            <span className="text-sm font-semibold">Retorno Total:</span>
+          </div>
+          <div className="font-bold text-blue-400">
+            R$ {totalReturn.toFixed(2)}
           </div>
         </div>
       </div>
