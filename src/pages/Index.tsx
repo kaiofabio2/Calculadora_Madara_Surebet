@@ -25,8 +25,7 @@ const Index = () => {
         
         {/* Footer */}
         <div className="mt-12 text-center text-sm text-gray-500">
-          <p>Desenvolvido com o poder do Sharingan para cálculos precisos de apostas.</p>
-          <p className="mt-2">&copy; 2025 Uchiha Systems</p>
+          <p>&copy; 2025 Madara Surebet</p>
         </div>
       </div>
     </div>

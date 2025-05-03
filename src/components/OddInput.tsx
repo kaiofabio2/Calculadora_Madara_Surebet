@@ -2,7 +2,7 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Minus } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface OddInputProps {
   index: number;
@@ -37,7 +37,7 @@ const OddInput = ({ index, value, onChange, onRemove, isRemovable }: OddInputPro
           onClick={() => onRemove(index)}
           className="text-uchiha-red hover:bg-uchiha-gray hover:text-white"
         >
-          <Minus className="h-4 w-4" />
+          <X className="h-4 w-4" />
         </Button>
       )}
     </div>
