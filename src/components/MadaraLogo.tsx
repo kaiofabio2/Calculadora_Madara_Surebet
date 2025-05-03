@@ -20,7 +20,7 @@ const MadaraLogo: React.FC<MadaraLogoProps> = ({
       style={{ width: size, height: size }}
     >
       <img 
-        src="/lovable-uploads/5cfa7573-4c6a-4a9b-b585-51601da36925.png" 
+        src="/lovable-uploads/480e7dd3-b54e-415a-9b33-254a84f7f3a6.png" 
         alt="Madara Logo" 
         className="w-full h-full object-contain"
       />
