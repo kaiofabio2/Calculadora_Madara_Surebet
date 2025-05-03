@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -52,7 +51,7 @@
   }
 
   body {
-    @apply bg-uchiha-black text-foreground;
+    @apply bg-[#0C0C0D] text-foreground;
     background-image: 
       radial-gradient(circle at 100px 100px, rgba(234, 56, 76, 0.05) 0%, rgba(0, 0, 0, 0) 20%),
       radial-gradient(circle at calc(100% - 100px) 200px, rgba(234, 56, 76, 0.05) 0%, rgba(0, 0, 0, 0) 25%);

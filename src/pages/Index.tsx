@@ -1,16 +1,16 @@
 
 import React from 'react';
 import SurebetCalculator from '@/components/SurebetCalculator';
-import SharinganLogo from '@/components/SharinganLogo';
+import MadaraLogo from '@/components/MadaraLogo';
 import { Separator } from '@/components/ui/separator';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-uchiha-black py-8 px-4">
+    <div className="min-h-screen bg-[#0C0C0D] py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-center items-center mb-8">
-          <SharinganLogo className="mr-4" />
+          <MadaraLogo className="mr-4" size={70} />
           <div>
             <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
               Madara <span className="text-uchiha-red">Surebet</span>
