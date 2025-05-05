@@ -10,8 +10,8 @@ const Index = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-center items-center mb-8">
-          <MadaraLogo className="mr-4" size={70} />
-          <div>
+          <div className="flex items-center">
+            <MadaraLogo className="mr-2" size={60} />
             <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
               Madara <span className="text-uchiha-red">Surebet</span>
             </h1>

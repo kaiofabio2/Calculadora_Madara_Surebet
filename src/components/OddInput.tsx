@@ -29,6 +29,7 @@ const OddInput = ({ index, value, onChange, onRemove, isRemovable }: OddInputPro
           onChange(index, parsedValue);
         }}
         className="bg-uchiha-gray text-white"
+        placeholder={`Cotação ${String.fromCharCode(65 + index)}`}
       />
       {isRemovable && (
         <Button 
