@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -201,7 +200,7 @@ const SurebetCalculator = () => {
                 />
               </div>
               
-              {/* Surebet Results Summary */}
+              {/* Surebet Results Summary - Simplified version without profit info */}
               <div className="mt-6">
                 <div className="p-4 bg-uchiha-black/50 rounded-lg border border-uchiha-gray">
                   <div className={cn(
@@ -219,22 +218,6 @@ const SurebetCalculator = () => {
                       className="h-2 bg-uchiha-gray" 
                     />
                   )}
-                  
-                  {/* Summary profit display */}
-                  <div className="mt-4 space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-base">Lucro Garantido:</span>
-                      <span className={`text-xl font-bold ${profit >= 0 ? 'text-green-500' : 'text-uchiha-red'}`}>
-                        R$ {profit.toFixed(2)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-base">Percentual de Lucro:</span>
-                      <span className={`text-xl font-bold ${profitPercentage >= 0 ? 'text-green-500' : 'text-uchiha-red'}`}>
-                        {profitPercentage.toFixed(2)}%
-                      </span>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
