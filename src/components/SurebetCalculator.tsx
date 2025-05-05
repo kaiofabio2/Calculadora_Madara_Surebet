@@ -122,144 +122,147 @@ const SurebetCalculator = () => {
         </h1>
       </div>
 
-      <Card className="uchiha-card mb-6">
-        <CardHeader>
-          <CardTitle className="text-xl flex items-center">
-            <Calculator className="w-5 h-5 mr-2 text-uchiha-red" />
-            Odds & Apostas
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {/* Odds Input Section */}
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-sm font-semibold text-gray-400">Cotações de Apostas</h3>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleAddOdd}
-                  className="sharingan-button"
-                >
-                  <Plus className="w-4 h-4 mr-1" /> Adicionar Odd
-                </Button>
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Left Column: Odds & Inputs */}
+        <Card className="uchiha-card">
+          <CardHeader>
+            <CardTitle className="text-xl flex items-center">
+              <Calculator className="w-5 h-5 mr-2 text-uchiha-red" />
+              Odds & Apostas
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              {/* Odds Input Section */}
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-sm font-semibold text-gray-400">Cotações de Apostas</h3>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleAddOdd}
+                    className="sharingan-button"
+                  >
+                    <Plus className="w-4 h-4 mr-1" /> Adicionar Odd
+                  </Button>
+                </div>
+                
+                <div className="space-y-3">
+                  {odds.map((odd, index) => (
+                    <OddInput
+                      key={index}
+                      index={index}
+                      value={odd}
+                      onChange={updateOdd}
+                      onRemove={handleRemoveOdd}
+                      isRemovable={odds.length > 2}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <Separator className="bg-uchiha-gray" />
+
+              {/* Total Stake Input */}
+              <div className="space-y-2">
+                <label htmlFor="totalStake" className="text-sm font-semibold text-gray-400">
+                  Valor Total da Aposta (R$)
+                </label>
+                <Input
+                  id="totalStake"
+                  type="number"
+                  min="0"
+                  step="10"
+                  value={totalStake ?? ''}
+                  onChange={(e) => {
+                    const val = e.target.value === '' ? '' : parseFloat(e.target.value);
+                    setTotalStake(val);
+                  }}
+                  className="bg-uchiha-gray text-white"
+                />
+              </div>
+
+              {/* Rounding Value Input */}
+              <div className="space-y-2">
+                <label htmlFor="roundingValue" className="text-sm font-semibold text-gray-400">
+                  Arredondar Apostas Para (R$)
+                </label>
+                <Input
+                  id="roundingValue"
+                  type="number"
+                  min="0"
+                  step="0.5"
+                  value={roundingValue ?? ''}
+                  onChange={(e) => {
+                    const val = e.target.value === '' ? '' : parseFloat(e.target.value);
+                    setRoundingValue(val);
+                  }}
+                  className="bg-uchiha-gray text-white"
+                />
               </div>
               
-              <div className="space-y-3">
-                {odds.map((odd, index) => (
-                  <OddInput
-                    key={index}
-                    index={index}
-                    value={odd}
-                    onChange={updateOdd}
-                    onRemove={handleRemoveOdd}
-                    isRemovable={odds.length > 2}
-                  />
-                ))}
+              {/* Surebet Results Summary */}
+              <div className="mt-6">
+                <div className="p-4 bg-uchiha-black/50 rounded-lg border border-uchiha-gray">
+                  <div className={cn(
+                    "text-xl font-medium mb-2", 
+                    isSurebetPossible ? "text-green-400" : "text-uchiha-red"
+                  )}>
+                    {isSurebetPossible 
+                      ? `Surebet Encontrada: ${margin.toFixed(2)}% de lucro`
+                      : "Não é uma Surebet"
+                    }
+                  </div>
+                  {isSurebetPossible && (
+                    <Progress 
+                      value={Math.min(margin * 2, 100)} 
+                      className="h-2 bg-uchiha-gray" 
+                    />
+                  )}
+                  
+                  {/* Summary profit display */}
+                  <div className="mt-4 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-base">Lucro Garantido:</span>
+                      <span className={`text-xl font-bold ${profit >= 0 ? 'text-green-500' : 'text-uchiha-red'}`}>
+                        R$ {profit.toFixed(2)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-base">Percentual de Lucro:</span>
+                      <span className={`text-xl font-bold ${profitPercentage >= 0 ? 'text-green-500' : 'text-uchiha-red'}`}>
+                        {profitPercentage.toFixed(2)}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
 
-            <Separator className="bg-uchiha-gray" />
-
-            {/* Total Stake Input */}
-            <div className="space-y-2">
-              <label htmlFor="totalStake" className="text-sm font-semibold text-gray-400">
-                Valor Total da Aposta (R$)
-              </label>
-              <Input
-                id="totalStake"
-                type="number"
-                min="0"
-                step="10"
-                value={totalStake ?? ''}
-                onChange={(e) => {
-                  const val = e.target.value === '' ? '' : parseFloat(e.target.value);
-                  setTotalStake(val);
-                }}
-                className="bg-uchiha-gray text-white"
-              />
-            </div>
-
-            {/* Rounding Value Input */}
-            <div className="space-y-2">
-              <label htmlFor="roundingValue" className="text-sm font-semibold text-gray-400">
-                Arredondar Apostas Para (R$)
-              </label>
-              <Input
-                id="roundingValue"
-                type="number"
-                min="0"
-                step="0.5"
-                value={roundingValue ?? ''}
-                onChange={(e) => {
-                  const val = e.target.value === '' ? '' : parseFloat(e.target.value);
-                  setRoundingValue(val);
-                }}
-                className="bg-uchiha-gray text-white"
-              />
-            </div>
+        {/* Right Column: Stake Distribution Results */}
+        <Card className="uchiha-card">
+          <CardHeader>
+            <CardTitle className="text-xl">Distribuição das Apostas</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResultsDisplay 
+              stakes={stakes}
+              odds={odds}
+              profit={profit}
+              profitPercentage={profitPercentage}
+              onSpecificStakeChange={handleSpecificStakeChange}
+            />
             
-            {/* Surebet Results Summary */}
-            <div className="mt-6">
-              <div className="p-4 bg-uchiha-black/50 rounded-lg border border-uchiha-gray">
-                <div className={cn(
-                  "text-lg font-medium mb-2", 
-                  isSurebetPossible ? "text-green-400" : "text-uchiha-red"
-                )}>
-                  {isSurebetPossible 
-                    ? `Surebet Encontrada: ${margin.toFixed(2)}% de lucro`
-                    : "Não é uma Surebet"
-                  }
-                </div>
-                {isSurebetPossible && (
-                  <Progress 
-                    value={Math.min(margin * 2, 100)} 
-                    className="h-2 bg-uchiha-gray" 
-                  />
-                )}
-                
-                {/* Summary profit display */}
-                <div className="mt-4 space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-base">Lucro Garantido:</span>
-                    <span className={`text-xl font-bold ${profit >= 0 ? 'text-green-500' : 'text-uchiha-red'}`}>
-                      R$ {profit.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-base">Percentual de Lucro:</span>
-                    <span className={`text-xl font-bold ${profitPercentage >= 0 ? 'text-green-500' : 'text-uchiha-red'}`}>
-                      {profitPercentage.toFixed(2)}%
-                    </span>
-                  </div>
-                </div>
-              </div>
+            <div className="mt-6 text-center">
+              <p className="text-sm italic text-gray-400">
+                "Apostando com a precisão de Madara!"
+              </p>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Stake Distribution Results */}
-      <Card className="uchiha-card">
-        <CardHeader>
-          <CardTitle className="text-xl">Distribuição das Apostas</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResultsDisplay 
-            stakes={stakes}
-            odds={odds}
-            profit={profit}
-            profitPercentage={profitPercentage}
-            onSpecificStakeChange={handleSpecificStakeChange}
-          />
-          
-          <div className="mt-6 text-center">
-            <p className="text-sm italic text-gray-400">
-              "Apostando com a precisão de Madara!"
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

@@ -53,7 +53,7 @@ const ResultsDisplay = ({
                 type="number"
                 min="0"
                 step="1"
-                value={stake ? stake.toFixed(2) : ''}
+                value={stake || ''}
                 onChange={(e) => {
                   const val = e.target.value === '' ? '' : parseFloat(e.target.value);
                   onSpecificStakeChange(index, val);
