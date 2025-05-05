@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Progress } from '@/components/ui/progress';
 import { Calculator, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -199,27 +198,6 @@ const SurebetCalculator = () => {
                   className="bg-uchiha-gray text-white"
                 />
               </div>
-              
-              {/* Surebet Results Summary - Simplified version without profit info */}
-              <div className="mt-6">
-                <div className="p-4 bg-uchiha-black/50 rounded-lg border border-uchiha-gray">
-                  <div className={cn(
-                    "text-xl font-medium mb-2", 
-                    isSurebetPossible ? "text-green-400" : "text-uchiha-red"
-                  )}>
-                    {isSurebetPossible 
-                      ? `Surebet Encontrada: ${margin.toFixed(2)}% de lucro`
-                      : "Não é uma Surebet"
-                    }
-                  </div>
-                  {isSurebetPossible && (
-                    <Progress 
-                      value={Math.min(margin * 2, 100)} 
-                      className="h-2 bg-uchiha-gray" 
-                    />
-                  )}
-                </div>
-              </div>
             </div>
           </CardContent>
         </Card>
@@ -235,6 +213,8 @@ const SurebetCalculator = () => {
               odds={odds}
               profit={profit}
               profitPercentage={profitPercentage}
+              isSurebetPossible={isSurebetPossible}
+              margin={margin}
               onSpecificStakeChange={handleSpecificStakeChange}
             />
             

@@ -3,12 +3,16 @@ import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { ArrowUp, Percent, DollarSign, RefreshCw } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 
 interface ResultsDisplayProps {
   stakes: number[];
   odds: number[];
   profit: number;
   profitPercentage: number;
+  isSurebetPossible: boolean;
+  margin: number;
   onSpecificStakeChange: (index: number, value: number | '') => void;
 }
 
@@ -17,6 +21,8 @@ const ResultsDisplay = ({
   odds,
   profit, 
   profitPercentage,
+  isSurebetPossible,
+  margin,
   onSpecificStakeChange
 }: ResultsDisplayProps) => {
   // Calculate total stake
@@ -52,7 +58,7 @@ const ResultsDisplay = ({
               <Input
                 type="number"
                 min="0"
-                step="1"
+                step="0.01"
                 value={stake ? stake.toFixed(2) : ''}
                 onChange={(e) => {
                   const val = e.target.value === '' ? '' : parseFloat(e.target.value);
@@ -101,6 +107,25 @@ const ResultsDisplay = ({
           <div className="font-bold text-blue-400">
             R$ {totalReturn.toFixed(2)}
           </div>
+        </div>
+        
+        {/* Surebet Results Summary */}
+        <div className="mt-3">
+          <div className={cn(
+            "text-xl font-medium mb-2", 
+            isSurebetPossible ? "text-green-400" : "text-uchiha-red"
+          )}>
+            {isSurebetPossible 
+              ? `Surebet Encontrada: ${margin.toFixed(2)}% de lucro`
+              : "Não é uma Surebet"
+            }
+          </div>
+          {isSurebetPossible && (
+            <Progress 
+              value={Math.min(margin * 2, 100)} 
+              className="h-2 bg-uchiha-gray" 
+            />
+          )}
         </div>
       </div>
       
