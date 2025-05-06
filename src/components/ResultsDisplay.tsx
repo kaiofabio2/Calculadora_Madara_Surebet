@@ -46,6 +46,26 @@ const ResultsDisplay = ({
       cleanValue = parts[0] + '.' + parts.slice(1).join('');
     }
     
+    // Handle more than 2 decimal places by shifting excess to the integer part
+    if (parts.length === 2 && parts[1].length > 2) {
+      const integerPart = parseInt(parts[0] || '0', 10);
+      const decimalPart = parts[1];
+      
+      // Extract the first two decimal places
+      const keepDecimal = decimalPart.substring(0, 2);
+      
+      // Convert the remaining decimal places to an integer to add to the integer part
+      const moveToInt = parseInt(decimalPart.substring(2), 10) || 0;
+      if (moveToInt > 0) {
+        // Add the shifted value to the integer part (divide by appropriate power of 10)
+        const shiftedValue = moveToInt / Math.pow(10, decimalPart.substring(2).length);
+        const newInteger = integerPart + shiftedValue;
+        return `${Math.floor(newInteger)}.${keepDecimal}`;
+      }
+      
+      return `${integerPart}.${keepDecimal}`;
+    }
+    
     return cleanValue;
   };
 
@@ -55,15 +75,8 @@ const ResultsDisplay = ({
     
     const numValue = parseFloat(value);
     
-    // If there are more than 2 decimal places, adjust accordingly
-    const decimalStr = numValue.toString().split('.')[1] || '';
-    if (decimalStr.length > 2) {
-      // Move extra decimal places to the integer part
-      const factor = Math.pow(10, decimalStr.length - 2);
-      return Math.round(numValue * factor) / factor;
-    }
-    
-    return numValue;
+    // Format to exactly 2 decimal places
+    return Math.round(numValue * 100) / 100;
   };
 
   return (
