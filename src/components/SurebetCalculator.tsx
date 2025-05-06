@@ -1,13 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Calculator, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Calculator } from 'lucide-react';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import OddInput from '@/components/OddInput';
 import ResultsDisplay from '@/components/ResultsDisplay';
+import OddsInputSection from '@/components/calculator/OddsInputSection';
+import StakeConfigSection from '@/components/calculator/StakeConfigSection';
 import { 
   isSurebet, 
   calculateMargin,
@@ -15,7 +14,6 @@ import {
   roundStakes,
   calculateTotalProfit,
   calculateProfitPercentage,
-  recalculateStakesForCustomTotal,
   recalculateStakesForSpecificBet
 } from '@/utils/surebetCalculator';
 
@@ -64,7 +62,7 @@ const SurebetCalculator = () => {
       return;
     }
     setOdds([...odds, 0]);
-    setStakes([...stakes, 0]); // Adicione um novo elemento ao stakes para manter sincronizado com as odds
+    setStakes([...stakes, 0]);
   };
 
   const handleRemoveOdd = (index: number) => {
@@ -76,7 +74,6 @@ const SurebetCalculator = () => {
     newOdds.splice(index, 1);
     setOdds(newOdds);
     
-    // Também atualiza o array de stakes
     const newStakes = [...stakes];
     newStakes.splice(index, 1);
     setStakes(newStakes);
@@ -102,7 +99,6 @@ const SurebetCalculator = () => {
       setProfit(calculatedProfit);
       setProfitPercentage(calculatedProfitPercentage);
     } else if (value === '') {
-      // Permite que o campo fique vazio
       const newStakes = [...stakes];
       newStakes[index] = 0;
       setStakes(newStakes);
@@ -132,72 +128,22 @@ const SurebetCalculator = () => {
           <CardContent>
             <div className="space-y-6">
               {/* Odds Input Section */}
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-sm font-semibold text-gray-400">Cotações de Apostas</h3>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={handleAddOdd}
-                    className="sharingan-button"
-                  >
-                    <Plus className="w-4 h-4 mr-1" /> Adicionar Odd
-                  </Button>
-                </div>
-                
-                <div className="space-y-3">
-                  {odds.map((odd, index) => (
-                    <OddInput
-                      key={index}
-                      index={index}
-                      value={odd}
-                      onChange={updateOdd}
-                      onRemove={handleRemoveOdd}
-                      isRemovable={odds.length > 2}
-                    />
-                  ))}
-                </div>
-              </div>
+              <OddsInputSection 
+                odds={odds} 
+                updateOdd={updateOdd}
+                handleAddOdd={handleAddOdd}
+                handleRemoveOdd={handleRemoveOdd}
+              />
 
               <Separator className="bg-uchiha-gray" />
 
-              {/* Total Stake Input */}
-              <div className="space-y-2">
-                <label htmlFor="totalStake" className="text-sm font-semibold text-gray-400">
-                  Valor Total da Aposta (R$)
-                </label>
-                <Input
-                  id="totalStake"
-                  type="number"
-                  min="0"
-                  step="10"
-                  value={totalStake ?? ''}
-                  onChange={(e) => {
-                    const val = e.target.value === '' ? '' : parseFloat(e.target.value);
-                    setTotalStake(val);
-                  }}
-                  className="bg-uchiha-gray text-white"
-                />
-              </div>
-
-              {/* Rounding Value Input */}
-              <div className="space-y-2">
-                <label htmlFor="roundingValue" className="text-sm font-semibold text-gray-400">
-                  Arredondar Apostas Para (R$)
-                </label>
-                <Input
-                  id="roundingValue"
-                  type="number"
-                  min="0"
-                  step="0.5"
-                  value={roundingValue ?? ''}
-                  onChange={(e) => {
-                    const val = e.target.value === '' ? '' : parseFloat(e.target.value);
-                    setRoundingValue(val);
-                  }}
-                  className="bg-uchiha-gray text-white"
-                />
-              </div>
+              {/* Stake Config Section */}
+              <StakeConfigSection 
+                totalStake={totalStake}
+                roundingValue={roundingValue}
+                setTotalStake={setTotalStake}
+                setRoundingValue={setRoundingValue}
+              />
             </div>
           </CardContent>
         </Card>
