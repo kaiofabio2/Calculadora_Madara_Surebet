@@ -33,50 +33,24 @@ const ResultsDisplay = ({
     ? (stakes[0] * odds[0]) 
     : 0;
 
-  // Function to format input value to have exactly 2 decimal places
-  const formatCurrencyInput = (value: string): string => {
-    if (value === '') return '';
+  // Function to handle stake input changes
+  const handleStakeChange = (index: number, inputValue: string) => {
+    // Remove any non-digit characters
+    const cleanValue = inputValue.replace(/[^\d]/g, '');
     
-    // Remove any non-numeric characters except the decimal point
-    let cleanValue = value.replace(/[^\d.]/g, '');
+    // Convert to number and divide by 100 to get decimal value (e.g., 1234 -> 12.34)
+    const numericValue = cleanValue === '' ? '' : parseInt(cleanValue, 10) / 100;
     
-    // Ensure there's only one decimal point
-    const parts = cleanValue.split('.');
-    if (parts.length > 2) {
-      cleanValue = parts[0] + '.' + parts.slice(1).join('');
-    }
-    
-    // Handle more than 2 decimal places by shifting excess to the integer part
-    if (parts.length === 2 && parts[1].length > 2) {
-      const integerPart = parseInt(parts[0] || '0', 10);
-      const decimalPart = parts[1];
-      
-      // Extract the first two decimal places
-      const keepDecimal = decimalPart.substring(0, 2);
-      
-      // Convert the remaining decimal places to an integer to add to the integer part
-      const moveToInt = parseInt(decimalPart.substring(2), 10) || 0;
-      if (moveToInt > 0) {
-        // Add the shifted value to the integer part (divide by appropriate power of 10)
-        const shiftedValue = moveToInt / Math.pow(10, decimalPart.substring(2).length);
-        const newInteger = integerPart + shiftedValue;
-        return `${Math.floor(newInteger)}.${keepDecimal}`;
-      }
-      
-      return `${integerPart}.${keepDecimal}`;
-    }
-    
-    return cleanValue;
+    // Update the stake value
+    onSpecificStakeChange(index, numericValue);
   };
 
-  // Function to adjust value when losing focus (blur)
-  const handleBlur = (value: string): number => {
-    if (value === '') return 0;
+  // Function to format display value for inputs
+  const formatDisplayValue = (value: number | undefined | null): string => {
+    if (value === undefined || value === null || value === 0) return '';
     
-    const numValue = parseFloat(value);
-    
-    // Format to exactly 2 decimal places
-    return Math.round(numValue * 100) / 100;
+    // Format to always show 2 decimal places
+    return (value).toFixed(2).replace('.', ',');
   };
 
   return (
@@ -103,17 +77,9 @@ const ResultsDisplay = ({
               <DollarSign className="h-4 w-4 text-gray-400" />
               <Input
                 type="text"
-                inputMode="decimal"
-                value={stake ? stake.toFixed(2) : ''}
-                onChange={(e) => {
-                  const formattedValue = formatCurrencyInput(e.target.value);
-                  const val = formattedValue === '' ? '' : parseFloat(formattedValue);
-                  onSpecificStakeChange(index, val);
-                }}
-                onBlur={(e) => {
-                  const adjustedValue = handleBlur(e.target.value);
-                  onSpecificStakeChange(index, adjustedValue);
-                }}
+                inputMode="numeric"
+                value={formatDisplayValue(stake)}
+                onChange={(e) => handleStakeChange(index, e.target.value)}
                 className="bg-uchiha-gray text-white"
                 placeholder={`Valor para Odd ${String.fromCharCode(65 + index)}`}
               />
