@@ -33,6 +33,39 @@ const ResultsDisplay = ({
     ? (stakes[0] * odds[0]) 
     : 0;
 
+  // Function to format input value to have exactly 2 decimal places
+  const formatCurrencyInput = (value: string): string => {
+    if (value === '') return '';
+    
+    // Remove any non-numeric characters except the decimal point
+    let cleanValue = value.replace(/[^\d.]/g, '');
+    
+    // Ensure there's only one decimal point
+    const parts = cleanValue.split('.');
+    if (parts.length > 2) {
+      cleanValue = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    return cleanValue;
+  };
+
+  // Function to adjust value when losing focus (blur)
+  const handleBlur = (value: string): number => {
+    if (value === '') return 0;
+    
+    const numValue = parseFloat(value);
+    
+    // If there are more than 2 decimal places, adjust accordingly
+    const decimalStr = numValue.toString().split('.')[1] || '';
+    if (decimalStr.length > 2) {
+      // Move extra decimal places to the integer part
+      const factor = Math.pow(10, decimalStr.length - 2);
+      return Math.round(numValue * factor) / factor;
+    }
+    
+    return numValue;
+  };
+
   return (
     <div className="space-y-4">
       {/* Distribution of stakes */}
@@ -56,13 +89,17 @@ const ResultsDisplay = ({
             <div className="flex items-center gap-2">
               <DollarSign className="h-4 w-4 text-gray-400" />
               <Input
-                type="number"
-                min="0"
-                step="0.01"
+                type="text"
+                inputMode="decimal"
                 value={stake ? stake.toFixed(2) : ''}
                 onChange={(e) => {
-                  const val = e.target.value === '' ? '' : parseFloat(e.target.value);
+                  const formattedValue = formatCurrencyInput(e.target.value);
+                  const val = formattedValue === '' ? '' : parseFloat(formattedValue);
                   onSpecificStakeChange(index, val);
+                }}
+                onBlur={(e) => {
+                  const adjustedValue = handleBlur(e.target.value);
+                  onSpecificStakeChange(index, adjustedValue);
                 }}
                 className="bg-uchiha-gray text-white"
                 placeholder={`Valor para Odd ${String.fromCharCode(65 + index)}`}
